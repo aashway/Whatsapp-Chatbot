@@ -5,32 +5,54 @@ const prisma = new PrismaClient();
 
 export const sendBulkMessage = async (req, res) => {
   try {
-    const { message } = req.body;
+    const { name, message } = req.body;
 
-    if (!message) {
-      return res.status(400).json({ error: "message is required" });
+    if (!name || !message) {
+      return res.status(400).json({ error: "Campaign name & message required" });
     }
 
-    // Get all contacts
     const contacts = await prisma.contact.findMany();
 
     if (contacts.length === 0) {
       return res.status(400).json({ error: "No contacts found" });
     }
 
-    // Loop and send
+    // 1️⃣ Create Campaign
+    const campaign = await prisma.campaign.create({
+      data: {
+        name,
+        message,
+        totalContacts: contacts.length,
+        status: "running",
+      },
+    });
+
+    let sent = 0;
+
+    // 2️⃣ Send messages (for now mock / real both supported)
     for (const contact of contacts) {
       await sendWhatsAppMessage(contact.phoneNumber, message);
+      sent++;
     }
 
-    res.json({
+    // 3️⃣ Update campaign
+    await prisma.campaign.update({
+      where: { id: campaign.id },
+      data: {
+        sentCount: sent,
+        status: "completed",
+      },
+    });
+
+    return res.json({
       success: true,
-      message: "Bulk message send initiated",
+      campaignId: campaign.id,
       totalContacts: contacts.length,
+      sentCount: sent,
     });
 
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };

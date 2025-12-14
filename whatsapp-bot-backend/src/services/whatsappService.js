@@ -1,3 +1,5 @@
+// src/services/whatsappService.js
+
 import axios from "axios";
 
 export const sendWhatsAppMessage = async (phoneNumber, message) => {
@@ -18,11 +20,11 @@ export const sendWhatsAppMessage = async (phoneNumber, message) => {
 
     const res = await axios.post(url, payload, { headers });
 
-    console.log("Message sent to:", phoneNumber);
-    return res.data;
+    console.log("📩 Message sent:", phoneNumber, "->", message);
 
+    return res.data;
   } catch (err) {
-    console.error("WhatsApp API Error:", err?.response?.data || err.message);
+    console.error("❌ WhatsApp API Error:", err.response?.data || err.message);
     return null;
   }
 };

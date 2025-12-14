@@ -7,6 +7,10 @@ import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes.js";
 import contactRoutes from "./routes/contactRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
+import dashboardRoutes from "./routes/dashboardRoutes.js";
+import webhookRoutes from "./routes/webhookRoutes.js";
+import conversationRoutes from "./routes/conversationRoutes.js";
+import campaignRoutes from "./routes/campaignRoutes.js";
 
 
 dotenv.config();
@@ -21,6 +25,10 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/contacts", contactRoutes);
 app.use("/api/messages", messageRoutes);
+app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/webhook", webhookRoutes);
+app.use("/api/conversations", conversationRoutes);
+app.use("/api/campaigns", campaignRoutes);
 
 // health route
 app.get("/health", (req, res) => {

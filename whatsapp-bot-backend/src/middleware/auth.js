@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-export const auth = (req, res, next) => {
+const auth = (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
 
@@ -20,3 +20,7 @@ export const auth = (req, res, next) => {
     return res.status(401).json({ error: "Invalid token" });
   }
 };
+
+// 👉 DEFAULT + NAMED EXPORT dono
+export default auth;
+export { auth };
